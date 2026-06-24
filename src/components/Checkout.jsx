@@ -1,0 +1,43 @@
+import { CartContext } from "../context/CartContext"
+import { useContext } from "react"
+import { createOrder } from "../firebase/db"
+import { serverTimestamp } from "firebase/firestore"
+
+function Checkout() {
+  const {cart} = useContext(CartContext)
+  const handleCreateOrder=(e)=>{
+    e.preventDefault()
+   
+    const form = e.target
+    const name=form.name.value
+    const email=form.email.value
+    const phone=form.phone.value
+    const address=form.address.value
+
+     createOrder({
+      user: {
+        name,
+        email,
+        phone,
+        address
+      },
+      items: cart,
+      time: serverTimestamp()
+      })
+  }
+  return (
+    <div className="mx-10  mt-10">
+      <form className="flex flex-col gap-3 mt-3 " onSubmit={handleCreateOrder} >
+        <p>para finalizar tu compra, necesitamos estos datos👇</p>
+        <input required id='name' type="text" placeholder="Pepito Perez" className="input w-full " />
+        <input required id='email' type="email" placeholder="pepito@gmail.com" className="input w-full" />
+        <input required id='phone' type="text" placeholder="+54911234345665" className="input w-full" />
+        <input required id='address' type="text" placeholder="Caba , Konoja 123" className="input w-full" />
+        <button className=" btn btn-primary">finalizar la compra 🎉</button>
+      </form>
+
+
+    </div>
+  )
+}
+export default Checkout
